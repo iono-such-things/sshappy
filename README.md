@@ -1,225 +1,89 @@
-# Server Manager - React Native App
-
-A production-ready React Native/Expo Android app for managing SSH servers with health monitoring, quick actions, and secure credential storage.
-
-## Features
-
-- **Server Management**: Add, edit, delete servers with secure credential storage
-- **SSH Integration**: Connect via password or SSH key authentication
-- **Quick Actions**: 12 pre-built actions (service restart, logs, deployment, system stats)
-- **Health Monitoring**: Background health checks with push notifications
-- **OTA Updates**: Automatic app updates via Expo Updates
-
-## Tech Stack
-
-- **Framework**: React Native + Expo SDK 50
-- **Navigation**: React Navigation 6
-- **SSH**: @dylankenneally/react-native-ssh-sftp
-- **Storage**: expo-secure-store (hardware-backed encryption)
-- **Background Tasks**: expo-background-fetch + expo-task-manager
-- **Testing**: Jest + React Native Testing Library
-
-## Project Structure
-
-```
-server-manager/
-├── src/
-│   ├── components/          # Reusable UI components
-│   │   ├── FormInput.tsx
-│   │   ├── StatusBadge.tsx
-│   │   ├── LoadingSpinner.tsx
-│   │   ├── Toast.tsx
-│   │   └── EmptyState.tsx
-│   ├── screens/             # App screens
-│   │   ├── ServerListScreen.tsx
-│   │   ├── AddServerScreen_Enhanced.tsx
-│   │   ├── ServerDetailsScreen.tsx
-│   │   └── SettingsScreen.tsx
-│   ├── services/            # Business logic
-│   │   ├── CredentialService.ts
-│   │   ├── SSHService.ts
-│   │   ├── ActionService.ts
-│   │   └── MonitoringService.ts
-│   ├── types/               # TypeScript types
-│   │   ├── index.ts
-│   │   └── actions.ts
-│   ├── templates/           # Quick action templates
-│   │   └── default-actions.json
-│   ├── utils/               # Utility functions
-│   │   └── validation.ts
-│   ├── navigation.tsx       # Navigation configuration
-│   └── __tests__/           # Unit tests
-├── app.json                 # Expo configuration
-├── eas.json                 # EAS Build configuration
-├── package.json
-└── App.tsx
-```
-
-## Quick Start
-
-### Prerequisites
-
-- Node.js 18+
-- npm or yarn
-- Expo CLI: `npm install -g expo-cli eas-cli`
-
-### Installation
-
-```bash
-# Clone the repository
-cd code/server-manager
-
-# Install dependencies
-npm install
-
-# Start development server
-npx expo start
-
-# Run on Android
-npx expo start --android
-```
-
-### Testing
-
-```bash
-# Run all tests
-npm test
-
-# Run tests with coverage
-npm test -- --coverage
-
-# Type checking
-npm run type-check
-```
-
-## Building for Production
-
-### Setup EAS
-
-```bash
-# Login to Expo
-eas login
-
-# Configure project
-eas build:configure
-```
-
-### Build APK (for testing)
-
-```bash
-eas build --platform android --profile preview
-```
-
-### Build AAB (for Play Store)
-
-```bash
-eas build --platform android --profile production
-```
-
-### Publish OTA Update
-
-```bash
-eas update --branch production --message "Bug fixes and improvements"
-```
-
-## CI/CD Pipeline
-
-GitHub Actions automatically:
-
-1. **On every push**: Run tests and type checking
-2. **On main branch**: Build preview APK
-3. **On main branch**: Publish OTA update
-4. **On main branch**: Build production AAB (for releases)
-
-Required secrets in GitHub:
-- `EXPO_TOKEN`: Get from `eas whoami` and create token at expo.dev
-
-## Configuration
-
-### app.json
-
-Update these fields:
-- `expo.updates.url`: Your project's update URL
-- `expo.extra.eas.projectId`: Your EAS project ID
-
-Get these by running:
-```bash
-eas init
-```
-
-### Environment Variables
-
-The app uses these optional environment variables (configure via EAS Secrets):
-- None required for basic functionality
-- All credentials stored securely on-device
-
-## Security
-
-- **Credentials**: Stored in expo-secure-store with hardware-backed encryption
-- **SSH Keys**: Never logged or exposed
-- **Biometric Protection**: Optional Face ID/Fingerprint unlock
-- **Network**: All SSH connections use industry-standard encryption
-
-## Quick Actions
-
-12 pre-built actions included:
-
-1. **Service Restart** - Restart systemd services
-2. **View Logs** - Tail application logs
-3. **Check Disk Space** - df -h output
-4. **System Stats** - CPU, memory, uptime
-5. **Docker PS** - Running containers
-6. **Git Pull** - Update repository
-7. **PM2 Status** - Node.js processes
-8. **Nginx Reload** - Reload web server
-9. **Database Backup** - Automated backups
-10. **Clear Cache** - Remove temp files
-11. **Network Test** - Ping and connectivity
-12. **Process Monitor** - Top running processes
-
-Add custom actions by editing `src/templates/default-actions.json`.
-
-## Troubleshooting
-
-### SSH Connection Fails
-
-- Verify host, port, and credentials
-- Check server firewall rules
-- Ensure SSH service is running
-- Test with password auth first, then key auth
-
-### Background Monitoring Not Working
-
-- Grant notification permissions
-- Enable background app refresh (Android settings)
-- Check battery optimization settings
-
-### Build Failures
-
-- Clear cache: `npx expo start -c`
-- Clear node_modules: `rm -rf node_modules && npm install`
-- Update Expo: `npx expo install --fix`
-
-## Roadmap
-
-- [ ] iOS support
-- [ ] Multi-server SSH tunnels
-- [ ] Server groups and tags
-- [ ] Custom action builder UI
-- [ ] Export/import server configs
-- [ ] SSH session recording
-
-## Contributing
-
-This is a personal project, but suggestions welcome via issues.
-
-## License
-
-MIT License - See LICENSE file for details
-
-## Support
-
-For issues or questions:
-- GitHub Issues: [Your repo URL]
-- Email: dutchiono@gmail.com
-EDIT TO TRIGGER
+IyBTZXJ2ZXIgTWFuYWdlciAtIFJlYWN0IE5hdGl2ZSBBcHAKCkEgcHJvZHVj
+dGlvbi1yZWFkeSBSZWFjdCBOYXRpdmUvRXhwbyBBbmRyb2lkIGFwcCBmb3Ig
+bWFuYWdpbmcgU1NIIHNlcnZlcnMgd2l0aCBoZWFsdGggbW9uaXRvcmluZywg
+cXVpY2sgYWN0aW9ucywgYW5kIHNlY3VyZSBjcmVkZW50aWFsIHN0b3JhZ2Uu
+CgojIyBGZWF0dXJlcwoKLSAqKlNlcnZlciBNYW5hZ2VtZW50Kio6IEFkZCwg
+ZWRpdCwgZGVsZXRlIHNlcnZlcnMgd2l0aCBzZWN1cmUgY3JlZGVudGlhbCBz
+dG9yYWdlCi0gKipTU0ggSW50ZWdyYXRpb24qKjogQ29ubmVjdCB2aWEgcGFz
+c3dvcmQgb3IgU1NIIGtleSBhdXRoZW50aWNhdGlvbgotICoqUXVpY2sgQWN0
+aW9ucyoqOiAxMiBwcmUtYnVpbHQgYWN0aW9ucyAoc2VydmljZSByZXN0YXJ0
+LCBsb2dzLCBkZXBsb3ltZW50LCBzeXN0ZW0gc3RhdHMpCi0gKipIZWFsdGgg
+TW9uaXRvcmluZyoqOiBCYWNrZ3JvdW5kIGhlYWx0aCBjaGVja3Mgd2l0aCBw
+dXNoIG5vdGlmaWNhdGlvbnMKLSAqKk9UQSBVcGRhdGVzKio6IEF1dG9tYXRp
+YyBhcHAgdXBkYXRlcyB2aWEgRXhwbyBVcGRhdGVzCgojIyBUZWNoIFN0YWNr
+CgotICoqRnJhbWV3b3JrKio6IFJlYWN0IE5hdGl2ZSArIEV4cG8gU0RLIDUw
+Ci0gKipOYXZpZ2F0aW9uKio6IFJlYWN0IE5hdmlnYXRpb24gNgotICoqU1NI
+Kio6IEBkeWxhbmtlbm5lYWxseS9yZWFjdC1uYXRpdmUtc3NoLXNmdHAKLSAq
+KlN0b3JhZ2UqKjogZXhwby1zZWN1cmUtc3RvcmUgKGhhcmR3YXJlLWJhY2tl
+ZCBlbmNyeXB0aW9uKQotICoqQmFja2dyb3VuZCBUYXNrcyoqOiBleHBvLWJh
+Y2tncm91bmQtZmV0Y2ggKyBleHBvLXRhc2stbWFuYWdlcgotICoqVGVzdGlu
+ZyoqOiBKZXN0ICsgUmVhY3QgTmF0aXZlIFRlc3RpbmcgTGlicmFyeQoKIyMg
+UHJvamVjdCBTdHJ1Y3R1cmUKCmBgYApzZXJ2ZXItbWFuYWdlci8K4pSc4pSA
+4pSAIHNyYy8K4pSCICAg4pSc4pSA4pSAIGNvbXBvbmVudHMvICAgICAgICAg
+ICMgUmV1c2FibGUgVUkgY29tcG9uZW50cwrilIIgICDilIIgICDilJzilIDi
+lIAgRm9ybUlucHV0LnRzeArilIIgICDilIIgICDilJzilIDilIAgU3RhdHVz
+QmFkZ2UudHN4CuKUgiAgIOKUgiAgIOKUnOKUgOKUgCBMb2FkaW5nU3Bpbm5l
+ci50c3gK4pSCICAg4pSCICAg4pSc4pSA4pSAIFRvYXN0LnRzeArilIIgICDi
+lIIgICDilJTilIDilIAgRW1wdHlTdGF0ZS50c3gK4pSCICAg4pSc4pSA4pSA
+IHNjcmVlbnMvICAgICAgICAgICAgICMgQXBwIHNjcmVlbnMK4pSCICAg4pSC
+ICAg4pSc4pSA4pSAIFNlcnZlckxpc3RTY3JlZW4udHN4CuKUgiAgIOKUgiAg
+IOKUnOKUgOKUgCBBZGRTZXJ2ZXJTY3JlZW5fRW5oYW5jZWQudHN4CuKUgiAg
+IOKUgiAgIOKUnOKUgOKUgCBTZXJ2ZXJEZXRhaWxzU2NyZWVuLnRzeArilIIg
+ICDilIIgICDilJTilIDilIAgU2V0dGluZ3NTY3JlZW4udHN4CuKUgiAgIOKU
+nOKUgOKUgCBzZXJ2aWNlcy8gICAgICAgICAgICAjIEJ1c2luZXNzIGxvZ2lj
+CuKUgiAgIOKUgiAgIOKUnOKUgOKUgCBDcmVkZW50aWFsU2VydmljZS50cwri
+lIIgICDilIIgICDilJzilIDilIAgU1NIU2VydmljZS50cwrilIIgICDilIIg
+ICDilJzilIDilIAgQWN0aW9uU2VydmljZS50cwrilIIgICDilIIgICDilJTi
+lIDilIAgTW9uaXRvcmluZ1NlcnZpY2UudHMK4pSCICAg4pSc4pSA4pSAIHR5
+cGVzLyAgICAgICAgICAgICAgICMgVHlwZVNjcmlwdCB0eXBlcwrilIIgICDi
+lIIgICDilJzilIDilIAgaW5kZXgudHMK4pSCICAg4pSCICAg4pSU4pSA4pSA
+IGFjdGlvbnMudHMK4pSCICAg4pSc4pSA4pSAIHRlbXBsYXRlcy8gICAgICAg
+ICAgICMgUXVpY2sgYWN0aW9uIHRlbXBsYXRlcwrilIIgICDilIIgICDilJTi
+lIDilIAgZGVmYXVsdC1hY3Rpb25zLmpzb24K4pSCICAg4pSc4pSA4pSAIHV0
+aWxzLyAgICAgICAgICAgICAgICMgVXRpbGl0eSBmdW5jdGlvbnMK4pSCICAg
+4pSCICAg4pSU4pSA4pSAIHZhbGlkYXRpb24udHMK4pSCICAg4pSc4pSA4pSA
+IG5hdmlnYXRpb24udHN4ICAgICAgICMgTmF2aWdhdGlvbiBjb25maWd1cmF0
+aW9uCuKUgiAgIOKUlOKUgOKUgCBfX3Rlc3RzX18vICAgICAgICAgICAjIFVu
+aXQgdGVzdHMK4pSc4pSA4pSAIGFwcC5qc29uICAgICAgICAgICAgICAgICAj
+IEV4cG8gY29uZmlndXJhdGlvbgrilJzilIDilIAgZWFzLmpzb24gICAgICAg
+ICAgICAgICAgICMgRUFTIEJ1aWxkIGNvbmZpZ3VyYXRpb24K4pSc4pSA4pSA
+IHBhY2thZ2UuanNvbgrilJTilIDilIAgQXBwLnRzeApgYGAKCiMjIFF1aWNr
+IFN0YXJ0CgojIyMgUHJlcmVxdWlzaXRlcwoKLSBOb2RlLmpzIDE4KwotIG5w
+bSBvciB5YXJuCi0gRXhwbyBDTEk6IGBucG0gaW5zdGFsbCAtZyBleHBvLWNs
+aSBlYXMtY2xpYAoKIyMjIEluc3RhbGxhdGlvbgoKYGBgYmFzaAojIENsb25l
+IHRoZSByZXBvc2l0b3J5CmNkIGNvZGUvc2VydmVyLW1hbmFnZXIKCiMgSW5z
+dGFsbCBkZXBlbmRlbmNpZXMKbnBtIGluc3RhbGwKCiMgU3RhcnQgZGV2ZWxv
+cG1lbnQgc2VydmVyCm5weCBleHBvIHN0YXJ0CgojIFJ1biBvbiBBbmRyb2lk
+Cm5weCBleHBvIHN0YXJ0IC0tYW5kcm9pZApgYGAKCiMjIyBUZXN0aW5nCgpg
+YGBiYXNoCiMgUnVuIGFsbCB0ZXN0cwpucG0gdGVzdAoKIyBSdW4gdGVzdHMg
+d2l0aCBjb3ZlcmFnZQpucG0gdGVzdCAtLSAtLWNvdmVyYWdlCgojIFR5cGUg
+Y2hlY2tpbmcKbnBtIHJ1biB0eXBlLWNoZWNrCmBgYAoKIyMgQnVpbGRpbmcg
+Zm9yIFByb2R1Y3Rpb24KCiMjIyBTZXR1cCBFQVMKCmBgYGJhc2gKIyBMb2dp
+biB0byBFeHBvCmVhcyBsb2dpbgoKIyBDb25maWd1cmUgcHJvamVjdAplYXMg
+YnVpbGQ6Y29uZmlndXJlCmBgYAoKIyMjIEJ1aWxkIEFQSyAoZm9yIHRlc3Rp
+bmcpCgpgYGBiYXNoCmVhcyBidWlsZCAtLXBsYXRmb3JtIGFuZHJvaWQgLS1w
+cm9maWxlIHByZXZpZXcKYGBgCgojIyMgQnVpbGQgQUFCIChmb3IgUGxheSBT
+dG9yZSkKCmBgYGJhc2gKZWFzIGJ1aWxkIC0tcGxhdGZvcm0gYW5kcm9pZCAt
+LXByb2ZpbGUgcHJvZHVjdGlvbgpgYGAKCiMjIyBTdWJtaXQgVXBkYXRlCgpg
+YGBiYXNoCiMgQnVpbGQgYW5kIHN1Ym1pdCB0byBQbGF5IFN0b3JlCmVhcyBz
+dWJtaXQgLS1wbGF0Zm9ybSBhbmRyb2lkIC0tcHJvZmlsZSBwcm9kdWN0aW9u
+CmBgYAoKIyMgT1RBIFVwZGF0ZXMKCmBgYGJhc2gKIyBQdWJsaXNoIGEgbmV3
+IHVwZGF0ZQplYXMgdXBkYXRlIC0tYnJhbmNoIHByb2R1Y3Rpb24gLS1tZXNz
+YWdlICJCdWcgZml4ZXMgYW5kIHBlcmZvcm1hbmNlIGltcHJvdmVtZW50cyIK
+YGBgCgojIyBEZXBsb3ltZW50IFN0cmF0ZWd5CgoxLiAqKkRldmVsb3BtZW50
+Kio6IFB1c2ggdG8gYGRldmVsb3BgIGJyYW5jaCDigJQgdHJpZ2dlcnMgcHJl
+dmlldyBidWlsZAoyLiAqKlN0YWdpbmcqKjogTWVyZ2UgdG8gYHN0YWdpbmdg
+IOKAlCB0cmlnZ2VycyBpbnRlcm5hbCB0ZXN0aW5nIGJ1aWxkCjMuICoqUHJv
+ZHVjdGlvbioqOiBNZXJnZSB0byBgbWFpbmAg4oaSIHRyaWdnZXJzIEFBQiBi
+dWlsZCArIFBsYXkgU3RvcmUgc3VibWlzc2lvbgoKIyMgRW52aXJvbm1lbnQg
+VmFyaWFibGVzCgpgYGBlbnYKIyAuZW52LmV4YW1wbGUKRVhQT19QUk9KRUNUXVNMVUY9c2VydmVyLW1hbmFnZXIKRVhQT19BUFBfT1dORVI9eW91ci11
+c2VybmFtZQpFWFBPX1BBQ0tBR0VfTkFNRT1jb20ueW91cmFwcC5zZXJ2ZXIt
+bWFuYWdlcgpgYGAKCiMjIFRyb3VibGVzaG9vdGluZwoKLSAqKlNTSCBDb25u
+ZWN0aW9uIEZhaWx1cmUqKjogVmVyaWZ5IGNyZWRlbnRpYWxzIGFuZCBmaXJl
+d2FsbCBzZXR0aW5ncwotICoqQnVpbGQgRXJyb3JzKio6IENsZWFyIG5vZGVf
+bW9kdWxlcyBhbmQgcnVuIGBucG0gaW5zdGFsbGAKLSAqKkhlYWx0aCBDaGVj
+ayBOb3QgV29ya2luZyoqOiBDaGVjayBiYWNrZ3JvdW5kIHBlcm1pc3Npb25z
+IGluIHNldHRpbmdzCi0gKipPVEEgVXBkYXRlcyBOb3QgRG93bmxvYWRpbmcq
+KjogRW5zdXJlIGFwcCBpcyBub3QgZm9yY2VkIHRvIGNsb3NlIGR1cmluZyB1
+cGRhdGUKCiMjIExpY2Vuc2UKCk1JVAoKLS0tCgpMYXN0IHVwZGF0ZWQ6IEZl
+YnJ1YXJ5IDksIDIwMjYK
