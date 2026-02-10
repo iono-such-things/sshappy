@@ -27,8 +27,7 @@ jobs:
             # Pull/clone repo
             if [ -d "$APP_DIR/.git" ]; then
               cd $APP_DIR
-              git fetch origin main
-              git reset --hard origin/main
+              git pull origin main
             else
               git clone $REPO_URL $APP_DIR
               cd $APP_DIR
