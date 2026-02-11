@@ -44,16 +44,6 @@
     },
     "plugins": [
       [
-        "expo-notifications",
-        {
-          "icon": "./assets/notification-icon.png",
-          "color": "#007AFF",
-          "sounds": [
-            "./assets/notification.wav"
-          ]
-        }
-      ],
-      [
         "expo-build-properties",
         {
           "android": {
@@ -62,23 +52,14 @@
             "buildToolsVersion": "34.0.0"
           }
         }
-      ],
-      "expo-secure-store",
-      "expo-background-fetch",
-      "expo-task-manager"
+      ]
     ],
     "updates": {
-      "enabled": true,
-      "checkAutomatically": "ON_LOAD",
-      "fallbackToCacheTimeout": 0,
-      "url": "https://u.expo.dev/[your-project-id]"
-    },
-    "runtimeVersion": {
-      "policy": "appVersion"
+      "enabled": false
     },
     "extra": {
       "eas": {
-        "projectId": "[your-project-id]"
+        "projectId": ""
       }
     }
   }
