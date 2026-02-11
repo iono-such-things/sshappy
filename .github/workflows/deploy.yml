@@ -18,7 +18,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'npm'
 
       - name: Setup Expo and EAS
         uses: expo/expo-github-action@v8
@@ -27,13 +26,74 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --legacy-peer-deps
 
       - name: Run tests
         run: npm test -- --passWithNoTests
 
       - name: EAS Build (Preview APK)
-        run: eas build --platform android --profile preview --non-interactive --no-wait
+        id: eas-build
+        run: |
+          # Start build and capture the build ID
+          BUILD_OUTPUT=$(eas build --platform android --profile preview --non-interactive --json 2>&1 || true)
+          echo "$BUILD_OUTPUT"
+          
+          # Extract build ID from output
+          BUILD_ID=$(echo "$BUILD_OUTPUT" | grep -oP '"id":\s*"\K[^"]+' | head -1)
+          echo "build_id=$BUILD_ID" >> $GITHUB_OUTPUT
+          
+          if [ -z "$BUILD_ID" ]; then
+            echo "Failed to start EAS build"
+            exit 1
+          fi
+          echo "Build started with ID: $BUILD_ID"
+
+      - name: Wait for build and download APK
+        run: |
+          BUILD_ID="${{ steps.eas-build.outputs.build_id }}"
+          
+          if [ -z "$BUILD_ID" ]; then
+            echo "No build ID found, checking for latest build..."
+            BUILD_ID=$(eas build:list --platform android --status finished --limit 1 --json | jq -r '.[0].id')
+          fi
+          
+          echo "Waiting for build $BUILD_ID to complete..."
+          
+          # Poll for completion (max 30 min)
+          for i in {1..60}; do
+            STATUS=$(eas build:view $BUILD_ID --json | jq -r '.status')
+            echo "Build status: $STATUS"
+            
+            if [ "$STATUS" = "finished" ]; then
+              echo "Build completed!"
+              
+              # Get artifact URL and download
+              ARTIFACT_URL=$(eas build:view $BUILD_ID --json | jq -r '.artifacts.buildUrl')
+              echo "Downloading APK from: $ARTIFACT_URL"
+              
+              mkdir -p ./builds
+              curl -L -o ./builds/sshappy-latest.apk "$ARTIFACT_URL"
+              
+              echo "APK downloaded to ./builds/sshappy-latest.apk"
+              ls -la ./builds/
+              exit 0
+            elif [ "$STATUS" = "errored" ] || [ "$STATUS" = "canceled" ]; then
+              echo "Build failed with status: $STATUS"
+              exit 1
+            fi
+            
+            echo "Waiting 30s... ($i/60)"
+            sleep 30
+          done
+          
+          echo "Build timed out"
+          exit 1
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sshappy-apk
+          path: ./builds/sshappy-latest.apk
 
   deploy:
     name: Deploy to Server
@@ -44,42 +104,46 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy website to server
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: sshappy-apk
+          path: ./builds
+
+      - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
-            # Create app directory if it doesn't exist
-            mkdir -p /var/www/sshappy
+            mkdir -p /var/www/sshappy/builds
             cd /var/www/sshappy
             
             # Pull latest code
             if [ -d ".git" ]; then
               git pull origin main
             else
-              git clone https://github.com/dutchiono/sshappy.git .
+              git clone https://github.com/ionoi-inc/sshappy.git .
             fi
-            
-            # Create builds directory for APK storage
-            mkdir -p builds
-            
-            # Set proper permissions
-            chown -R www-data:www-data /var/www/sshappy
-            chmod -R 755 /var/www/sshappy
-            
-            # Reload nginx if config changed
-            nginx -t && systemctl reload nginx || true
-            
-            echo "✅ Deployment complete! Website live at your configured domain"
 
-      - name: Notify deployment status
-        if: always()
-        run: |
-          if [ "${{ job.status }}" == "success" ]; then
-            echo "🚀 Deployment successful!"
-          else
-            echo "❌ Deployment failed"
-            exit 1
-          fi
+      - name: Upload APK to server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          source: "./builds/sshappy-latest.apk"
+          target: "/var/www/sshappy/builds/"
+          strip_components: 1
+
+      - name: Create GitHub Release with APK
+        uses: softprops/action-gh-release@v1
+        if: github.ref == 'refs/heads/main'
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: Build ${{ github.run_number }}
+          files: ./builds/sshappy-latest.apk
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
